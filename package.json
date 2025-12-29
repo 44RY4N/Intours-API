@@ -1,0 +1,28 @@
+{
+  "name": "intours",
+  "version": "1.0.0",
+  "description": "Learning Node along with Express and MongoDB",
+  "homepage": "https://github.com/44RY4N/Intours#readme",
+  "bugs": {
+    "url": "https://github.com/44RY4N/Intours/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/44RY4N/Intours.git"
+  },
+  "license": "ISC",
+  "author": "44RY4N",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "nodemon": "^3.1.11"
+  },
+  "devDependencies": {
+    "prettier": "^3.7.4"
+  }
+}
