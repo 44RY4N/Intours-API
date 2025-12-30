@@ -101,6 +101,29 @@ app.patch('/api/v1/tours/:id', (req, res) => {
   });
 });
 
+app.delete('/api/v1/tours/:id', (req, res) => {
+  const ID = Number(req.params.id);
+  const index = tours.findIndex((tour) => tour.Serial === ID); // find tourIndex
+
+  if (!Number.isInteger(ID) || index === -1) {
+    return res
+      .status(404)
+      .json({ status: 'fail', message: 'Invalid ID or Tour Not Found' });
+  }
+
+  tours.splice(index, 1); // deleting from tours
+  //save to file
+  fs.writeFile('./dev-data/data/csvjson.json', JSON.stringify(tours), (err) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ status: 'fail', message: 'Internal Server Error' });
+    }
+    console.log('Successfully Deleted the Tour ✅');
+    res.status(204).json({ status: 'success', data: null });
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}...`);
 });
