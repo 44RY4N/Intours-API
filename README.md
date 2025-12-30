@@ -11,7 +11,7 @@ Supports filtering by **region, state, name, rating**, and includes pagination s
 
   * Region
   * State
-  * Name (standalone)
+  * Name 
   * Rating (ascending / descending)
 * Combine filters logically
 * Pagination support
@@ -90,7 +90,7 @@ GET /api/v1/tours?state=Delhi
 
 ---
 
-### ✅ Filter by name (standalone)
+### ✅ Filter by name (searches for name that includes your query)
 
 ```
 GET /api/v1/tours?name=gate
@@ -112,14 +112,12 @@ GET /api/v1/tours?rating=d
 ### ✅ Combine filters
 
 ```
-GET /api/v1/tours?region=Northern&state=Delhi&rating=d
+GET /api/v1/tours?region=Northern&state=Delhi&rating=d&name=fort
 ```
 
 ---
 
 ## 📦 Response Structure
-
-### When filtering by region:
 
 ```json
 {
@@ -137,30 +135,16 @@ GET /api/v1/tours?region=Northern&state=Delhi&rating=d
 }
 ```
 
-### Without region:
-
-```json
-{
-  "data": [
-    {
-      "Name": "India Gate",
-      "State": "Delhi",
-      "Zone": "Northern"
-    }
-  ]
-}
-```
-
 ---
 
 ## 🧠 Filtering Rules
 
 | Filter   | Behavior                           |
 | -------- | ---------------------------------- |
-| `name`   | Works alone only                   |
-| `region` | Can combine with `state`, `rating` |
-| `state`  | Works alone or with region         |
-| `rating` | Works with any filter              |
+| `region` | Filters tours by region            |
+| `state`  | Filters tours by state             |
+| `name`   | Filters tours by name              |
+| `rating` | Sorts tours by rating (asc / desc) |
 
 ---
 
@@ -180,6 +164,7 @@ curl "http://localhost:8000/api/v1/tours?region=Northern&state=Delhi&rating=d"
 * Node.js
 * Express.js
 * JavaScript (ES6+)
+* Postman (for debugging)
 
 ---
 
@@ -187,7 +172,6 @@ curl "http://localhost:8000/api/v1/tours?region=Northern&state=Delhi&rating=d"
 
 * Add pagination metadata
 * Add validation middleware
-* Add search across multiple fields
 * Add caching
 * Add database support (MongoDB / PostgreSQL)
 
