@@ -1,22 +1,23 @@
 # 🧭 INTours API
 
 A simple and flexible **Node.js + Express REST API** for managing and filtering tour data.
-Supports filtering by **region, state, name, rating**, and includes pagination support.
+Supports filtering, sorting, pagination, and full CRUD operations.
 
 ---
 
 ## 🚀 Features
 
-* Filter tours by:
+- Filter tours by:
+  - Region
+  - State
+  - Name
+  - Rating (ascending / descending)
 
-  * Region
-  * State
-  * Name 
-  * Rating (ascending / descending)
-* Combine filters logically
-* Pagination support
-* Clean and predictable response structure
-* Easily extendable
+- Combine filters logically
+- Pagination support
+- Full CRUD operations (Create, Read, Update, Delete)
+- Clean and predictable response structure
+- Easily extendable
 
 ---
 
@@ -32,9 +33,10 @@ project/
 ├── filter.js
 ├── filterByFeild.js
 ├── app.js
-│ 
-├──.prettierrc
-├──.gitignore
+├── tours.js
+│
+├── .prettierrc
+├── .gitignore
 ├── package-lock.json
 ├── package.json
 └── README.md
@@ -66,6 +68,8 @@ http://localhost:8000
 
 ## 📡 API Endpoints
 
+---
+
 ### ✅ Get all tours
 
 ```
@@ -74,45 +78,98 @@ GET /api/v1/tours
 
 ---
 
-### ✅ Filter by region
+### ✅ Get a tour by ID
+
+```
+GET /api/v1/tours/:id
+```
+
+---
+
+### ✅ Create a new tour
+
+```
+POST /api/v1/tours
+```
+
+**Body example:**
+
+```json
+{
+  "Name": "New Tour",
+  "State": "Delhi",
+  "Zone": "Northern",
+  "Google review rating": 4.5
+}
+```
+
+---
+
+### ✅ Update a tour (PATCH)
+
+```
+PATCH /api/v1/tours/:id
+```
+
+**Body example:**
+
+```json
+{
+  "Name": "Updated Tour Name",
+  "Google review rating": 4.8
+}
+```
+
+✔ Only updates provided fields
+✔ Keeps existing values intact
+
+---
+
+### ✅ Delete a tour
+
+```
+DELETE /api/v1/tours/:id
+```
+
+Deletes the tour permanently.
+
+---
+
+## 🔍 Filtering & Sorting
+
+### Filter by region
 
 ```
 GET /api/v1/tours?region=Northern
 ```
 
----
-
-### ✅ Filter by state
+### Filter by state
 
 ```
 GET /api/v1/tours?state=Delhi
 ```
 
----
-
-### ✅ Filter by name (searches for name that includes your query)
+### Filter by name (partial match)
 
 ```
 GET /api/v1/tours?name=gate
 ```
 
----
-
-### ✅ Sort by rating
+### Sort by rating
 
 ```
 GET /api/v1/tours?rating=d
 ```
 
-* `a` → ascending
-* `d` → descending
+- `a` → ascending
+- `d` → descending
 
 ---
 
-### ✅ Combine filters
+### Combine filters
 
 ```
-GET /api/v1/tours?region=Northern&state=Delhi&rating=d&name=fort
+GET /api/v1/tours?region=Northern&state=Delhi&rating=d
 ```
 
 ---
@@ -139,12 +196,14 @@ GET /api/v1/tours?region=Northern&state=Delhi&rating=d&name=fort
 
 ## 🧠 Filtering Rules
 
-| Filter   | Behavior                           |
-| -------- | ---------------------------------- |
-| `region` | Filters tours by region            |
-| `state`  | Filters tours by state             |
-| `name`   | Filters tours by name              |
-| `rating` | Sorts tours by rating (asc / desc) |
+| Filter   | Behavior                |
+| -------- | ----------------------- |
+| `region` | Filters tours by region |
+| `state`  | Filters tours by state  |
+| `name`   | Filters tours by name   |
+| `rating` | Sorts tours by rating   |
+
+All filters can be combined.
 
 ---
 
@@ -161,19 +220,27 @@ curl "http://localhost:8000/api/v1/tours?region=Northern&state=Delhi&rating=d"
 
 ## 🧩 Tech Stack
 
-* Node.js
-* Express.js
-* JavaScript (ES6+)
-* Postman (for debugging)
+- Node.js
+- Express.js
+- JavaScript (ES6+)
+- Postman (testing)
 
 ---
 
 ## 🚧 Future Improvements
 
-* Add pagination metadata
-* Add validation middleware
-* Add caching
-* Add database support (MongoDB / PostgreSQL)
+- Pagination metadata
+- Request validation
+- Centralized error handling
+- Database integration (MongoDB / PostgreSQL)
+- Authentication & authorization
 
 ---
 
+## ✅ Status
+
+✔ Actively developed
+✔ Clean architecture
+✔ Easy to extend
+
+---
