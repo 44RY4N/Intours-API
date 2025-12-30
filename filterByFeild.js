@@ -1,6 +1,14 @@
 const filterByRegion = (tours, region) => {
   console.log('filtering by region 🧭');
-  return tours.filter((tour) => tour.Zone === region);
+  const filteredTours = tours.filter((tour) => tour.Zone === region);
+
+  // extract unique states
+  const states = [...new Set(filteredTours.map((tour) => tour.State))];
+
+  return {
+    states,
+    data: filteredTours,
+  };
 };
 
 const filterByState = (tours, state) => {
@@ -23,4 +31,18 @@ const filterByRating = (tours, order) => {
   return tours;
 };
 
-module.exports = { filterByRegion, filterByState, filterByRating };
+const filterByName = (tours, name) => {
+  console.log('filtering by name');
+  name = name.toLowerCase();
+  const newTours = tours.filter((tour) =>
+    tour.Name.toLowerCase().includes(name),
+  );
+  return newTours;
+};
+
+module.exports = {
+  filterByRegion,
+  filterByState,
+  filterByRating,
+  filterByName,
+};
