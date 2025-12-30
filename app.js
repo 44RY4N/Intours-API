@@ -46,12 +46,13 @@ app.get('/api/v1/tours', (req, res) => {
 
 app.get('/api/v1/tours/:id', (req, res) => {
   const ID = req.params.id * 1;
-  if (ID > tours.length || !Number.isInteger(ID)) {
+  const tour = tours.find((el) => el.Serial === ID);
+  if (!tour || !Number.isInteger(ID)) {
     return res
       .status(404)
-      .json({ status: 'fail', message: 'Invalid ID Recieved' });
+      .json({ status: 'fail', message: 'Invalid ID Recieved/Tour not Found' });
   }
-  const tour = tours.find((el) => el.Serial === ID);
+
   res.status(200).json({ status: 'success', data: { tour } });
 });
 
@@ -69,6 +70,34 @@ app.post('/api/v1/tours', (req, res) => {
     }
     console.log('Successfully added a new Tour ✅');
     res.status(201).json({ status: 'success', data: { tour: newTour } });
+  });
+});
+
+// patching a tour by ID
+
+app.patch('/api/v1/tours/:id', (req, res) => {
+  const ID = Number(req.params.id);
+  const index = tours.findIndex((tour) => tour.Serial === ID); // find tourIndex
+
+  if (!Number.isInteger(ID) || index === -1) {
+    return res
+      .status(404)
+      .json({ status: 'fail', message: 'Invalid ID or Tour Not Found' });
+  }
+
+  tours[index] = {
+    ...tours[index],
+    ...req.body,
+  };
+  //save to file
+  fs.writeFile('./dev-data/data/csvjson.json', JSON.stringify(tours), (err) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ status: 'fail', message: 'Internal Server Error' });
+    }
+    console.log('Successfully updated the Tour ✅');
+    res.status(200).json({ status: 'success', data: tours[index] });
   });
 });
 
