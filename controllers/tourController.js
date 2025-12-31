@@ -43,7 +43,7 @@ exports.getTours = (req, res) => {
 
 exports.getTourById = (req, res) => {
   const ID = req.params.id * 1;
-  const tour = tours.find((el) => el.Serial === ID);
+  const tour = toursData.find((el) => el.Serial === ID);
   if (!tour) {
     return res.status(404).json({ status: 'fail', message: 'Tour not Found' });
   }
@@ -57,19 +57,23 @@ exports.getTourById = (req, res) => {
 // ADD A TOUR
 
 exports.postTour = (req, res) => {
-  const newID = tours[tours.length - 1].Serial + 1;
-  console.log(tours.length);
+  const newID = toursData[toursData.length - 1].Serial + 1;
+  console.log(toursData.length);
   const newTour = Object.assign({ Serial: newID }, req.body);
-  tours.push(newTour);
-  fs.writeFile('./dev-data/data/csvjson.json', JSON.stringify(tours), (err) => {
-    if (err) {
-      return res
-        .status(500)
-        .json({ status: 'fail', message: 'Internal Server Error' });
-    }
-    console.log('Successfully added a new Tour ✅');
-    res.status(201).json({ status: 'success', data: { tour: newTour } });
-  });
+  toursData.push(newTour);
+  fs.writeFile(
+    './dev-data/data/csvjson.json',
+    JSON.stringify(toursData),
+    (err) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({ status: 'fail', message: 'Internal Server Error' });
+      }
+      console.log('Successfully added a new Tour ✅');
+      res.status(201).json({ status: 'success', data: { tour: newTour } });
+    },
+  );
 };
 
 ///////////////////////////////////////////////////////////////////
@@ -78,26 +82,30 @@ exports.postTour = (req, res) => {
 // UPDATE A TOUR
 
 exports.patchTour = (req, res) => {
-  const index = tours.findIndex((tour) => tour.Serial === ID); // find tourIndex
+  const index = toursData.findIndex((tour) => tour.Serial === ID); // find tourIndex
 
   if (index === -1) {
     return res.status(404).json({ status: 'fail', message: 'Tour Not Found' });
   }
 
-  tours[index] = {
-    ...tours[index],
+  toursData[index] = {
+    ...toursData[index],
     ...req.body,
   };
   //save to file
-  fs.writeFile('./dev-data/data/csvjson.json', JSON.stringify(tours), (err) => {
-    if (err) {
-      return res
-        .status(500)
-        .json({ status: 'fail', message: 'Internal Server Error' });
-    }
-    console.log('Successfully updated the Tour ✅');
-    res.status(200).json({ status: 'success', data: tours[index] });
-  });
+  fs.writeFile(
+    './dev-data/data/csvjson.json',
+    JSON.stringify(toursData),
+    (err) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({ status: 'fail', message: 'Internal Server Error' });
+      }
+      console.log('Successfully updated the Tour ✅');
+      res.status(200).json({ status: 'success', data: toursData[index] });
+    },
+  );
 };
 
 ///////////////////////////////////////////////////////////////////
@@ -107,23 +115,27 @@ exports.patchTour = (req, res) => {
 
 exports.deleteTour = (req, res) => {
   const ID = Number(req.params.id);
-  const index = tours.findIndex((tour) => tour.Serial === ID); // find tourIndex
+  const index = toursData.findIndex((tour) => tour.Serial === ID); // find tourIndex
 
   if (index === -1) {
     return res.status(404).json({ status: 'fail', message: 'Tour Not Found' });
   }
 
-  tours.splice(index, 1); // deleting from tours
+  toursData.splice(index, 1); // deleting from tours
   //save to file
-  fs.writeFile('./dev-data/data/csvjson.json', JSON.stringify(tours), (err) => {
-    if (err) {
-      return res
-        .status(500)
-        .json({ status: 'fail', message: 'Internal Server Error' });
-    }
-    console.log('Successfully Deleted the Tour ✅');
-    res.status(204).json({ status: 'success', data: null });
-  });
+  fs.writeFile(
+    './dev-data/data/csvjson.json',
+    JSON.stringify(toursData),
+    (err) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({ status: 'fail', message: 'Internal Server Error' });
+      }
+      console.log('Successfully Deleted the Tour ✅');
+      res.status(204).json({ status: 'success', data: null });
+    },
+  );
 };
 
 exports.checkId = (req, res, next, val) => {
