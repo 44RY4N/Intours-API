@@ -42,7 +42,7 @@ exports.getTours = (req, res) => {
 // GET TOUR BY ID
 
 exports.getTourById = (req, res) => {
-  const ID = req.params.id * 1;
+  const ID = Number(req.params.id);
   const tour = toursData.find((el) => el.Serial === ID);
   if (!tour) {
     return res.status(404).json({ status: 'fail', message: 'Tour not Found' });
@@ -82,6 +82,7 @@ exports.postTour = (req, res) => {
 // UPDATE A TOUR
 
 exports.patchTour = (req, res) => {
+  const ID = Number(req.params.id);
   const index = toursData.findIndex((tour) => tour.Serial === ID); // find tourIndex
 
   if (index === -1) {
@@ -139,7 +140,7 @@ exports.deleteTour = (req, res) => {
 };
 
 exports.checkId = (req, res, next, val) => {
-  if (!Number.isInteger(req.params.id)) {
+  if (!Number.isInteger(Number(val))) {
     return res.status(500).json({
       status: 'fail',
       message: `Invalid ID Send an Integer Received NAN: ${val}`,
