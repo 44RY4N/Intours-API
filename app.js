@@ -6,6 +6,11 @@ const { getTours, getTourById, postTour, patchTour, deleteTour } = require(
 const PORT = 8000;
 app.use(express.json()); //middleware to parse json data
 
+app.use((req, res, next) => {
+  console.log('Here a middleware ran 👩‍💻🦠');
+  next();
+});
+
 //getting all tours //adding a new tour
 app.route('/api/v1/tours').get(getTours).post(postTour);
 
