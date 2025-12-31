@@ -1,5 +1,7 @@
 # 🧭 INTours API
 
+This is a very common Node.js practice project implemented by me with Indian tours and additional features like filtering and sorting.
+
 A simple and flexible **Node.js + Express REST API** for managing and filtering tour data.
 Supports filtering, sorting, pagination, and full CRUD operations.
 
