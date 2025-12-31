@@ -1,11 +1,13 @@
 const fs = require('fs');
-const filter = require('./filter.js');
-const tours = JSON.parse(fs.readFileSync('./dev-data/data/csvjson.json'));
+const filter = require(`${__dirname}/../filter/filter.js`);
+const tours = JSON.parse(
+  fs.readFileSync(`${__dirname}/../dev-data/data/csvjson.json`),
+);
 
 ///////////////////////////////////////////////////////////////////
 // GETTING TOURS
 
-const getTours = (req, res) => {
+exports.getTours = (req, res) => {
   let filteredTours, filteredTourData;
   const isFilter = req.query.filter === 'true'; //convert to boolean
 
@@ -45,7 +47,7 @@ const getTours = (req, res) => {
 
 // GET TOUR BY ID
 
-const getTourById = (req, res) => {
+exports.getTourById = (req, res) => {
   const ID = req.params.id * 1;
   const tour = tours.find((el) => el.Serial === ID);
   if (!tour || !Number.isInteger(ID)) {
@@ -62,7 +64,7 @@ const getTourById = (req, res) => {
 
 // ADD A TOUR
 
-const postTour = (req, res) => {
+exports.postTour = (req, res) => {
   const newID = tours[tours.length - 1].Serial + 1;
   console.log(tours.length);
   const newTour = Object.assign({ Serial: newID }, req.body);
@@ -83,7 +85,7 @@ const postTour = (req, res) => {
 
 // UPDATE A TOUR
 
-const patchTour = (req, res) => {
+exports.patchTour = (req, res) => {
   const ID = Number(req.params.id);
   const index = tours.findIndex((tour) => tour.Serial === ID); // find tourIndex
 
@@ -114,7 +116,7 @@ const patchTour = (req, res) => {
 
 // DELETE A TOUR
 
-const deleteTour = (req, res) => {
+exports.deleteTour = (req, res) => {
   const ID = Number(req.params.id);
   const index = tours.findIndex((tour) => tour.Serial === ID); // find tourIndex
 
@@ -136,7 +138,3 @@ const deleteTour = (req, res) => {
     res.status(204).json({ status: 'success', data: null });
   });
 };
-
-///////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////
-module.exports = { getTours, getTourById, postTour, patchTour, deleteTour };

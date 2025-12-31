@@ -1,4 +1,4 @@
-const filterByRegion = (tours, region) => {
+exports.filterByRegion = (tours, region) => {
   console.log('filtering by region 🧭');
   const filteredTours = tours.filter((tour) => tour.Zone === region);
 
@@ -11,12 +11,12 @@ const filterByRegion = (tours, region) => {
   };
 };
 
-const filterByState = (tours, state) => {
+exports.filterByState = (tours, state) => {
   console.log('filtering by State ⛰🌊🏙');
   return tours.filter((tour) => tour.State === state);
 };
 
-const filterByRating = (tours, order) => {
+exports.filterByRating = (tours, order) => {
   console.log('filtering by rating ⭐🌟🌟🌟⭐');
   if (order === 'a') {
     return tours.sort(
@@ -31,18 +31,11 @@ const filterByRating = (tours, order) => {
   return tours;
 };
 
-const filterByName = (tours, name) => {
+exports.filterByName = (tours, name) => {
   console.log('filtering by name');
   name = name.toLowerCase();
   const newTours = tours.filter((tour) =>
     tour.Name.toLowerCase().includes(name),
   );
   return newTours;
-};
-
-module.exports = {
-  filterByRegion,
-  filterByState,
-  filterByRating,
-  filterByName,
 };
