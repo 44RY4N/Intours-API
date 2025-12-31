@@ -1,10 +1,8 @@
 const controller = require(`${__dirname}/../controllers/filterController.js`);
 
-// This implements like a controller to maintain the MVC Architecture
+// This module is implemented like a controller to maintain MVC Architecture
 
 const filter = (tours, query) => {
-  // Formatted Structure for Ease of Access at FrontEnd
-
   if (query.region) {
     const regionResult = controller.filterByRegion(tours.data, query.region);
     tours.data = regionResult.data;

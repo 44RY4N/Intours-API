@@ -30,10 +30,20 @@ project/
 │   └── data/
 │       └── csvjson.json
 │
-├── filter.js
-├── filterByFeild.js
+├── filter/
+│   └── filter.js
+│
+├── routes
+│   └── tourRouter.js
+│   └── userRouter.js
+│
+├── controllers/
+│   └── filterController.js
+│   └── tourController.js
+│   └── userController.js
+│
 ├── app.js
-├── tours.js
+├── server.js
 │
 ├── .prettierrc
 ├── .gitignore

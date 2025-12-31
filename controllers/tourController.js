@@ -8,7 +8,7 @@ const toursData = JSON.parse(
 // GETTING TOURS
 
 exports.getTours = (req, res) => {
-  // standard Format
+  // Formatted Structure for Ease of Access at FrontEnd
   let tours = {
     meta: {
       states: [],
