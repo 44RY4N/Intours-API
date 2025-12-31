@@ -65,7 +65,7 @@ npm install
 ### 2️⃣ Start the server
 
 ```bash
-node server.js
+npm start
 ```
 
 Server runs on:
