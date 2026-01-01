@@ -1,13 +1,26 @@
+---
 # 🧭 INTours API
 
-This is a very common Node.js practice project implemented by me with Indian tours and additional features like filtering and sorting.
+A structured and scalable **Node.js + Express REST API** for managing Indian tourist destinations.
+This project demonstrates **backend fundamentals**, **clean architecture**, and **multiple implementation strategies** using Git branches.
+---
 
-A simple and flexible **Node.js + Express REST API** for managing and filtering tour data.
-Supports filtering, sorting, pagination, and full CRUD operations.
+## 📌 Overview
+
+INTours is a backend API that allows users to explore tourist destinations with features such as:
+
+- Filtering
+- Sorting
+- Pagination
+- CRUD operations
+- Modular architecture
+- MongoDB integration (optional branch)
+
+The project is intentionally designed with **two different backend approaches** to demonstrate architectural flexibility.
 
 ---
 
-## 🚀 Features
+## ✨ Key Features
 
 - Filter tours by:
   - Region
@@ -15,15 +28,16 @@ Supports filtering, sorting, pagination, and full CRUD operations.
   - Name
   - Rating (ascending / descending)
 
-- Combine filters logically
+- Combine multiple filters
 - Pagination support
-- Full CRUD operations (Create, Read, Update, Delete)
-- Clean and predictable response structure
-- Easily extendable
+- Full CRUD functionality
+- Clean and predictable API responses
+- Modular folder structure
+- Easy to extend and scale
 
 ---
 
-## 📁 Project Structure
+## 🧩 Project Structure
 
 ```
 project/
@@ -35,42 +49,102 @@ project/
 ├── filter/
 │   └── filter.js
 │
-├── routes
-│   └── tourRouter.js
+├── routes/
+│   ├── tourRouter.js
 │   └── userRouter.js
 │
 ├── controllers/
-│   └── filterController.js
-│   └── tourController.js
+│   ├── filterController.js
+│   ├── tourController.js
 │   └── userController.js
+│
+├── models/
+│   └── tourModel.js
 │
 ├── app.js
 ├── server.js
 │
-├── .prettierrc
+├──  config.env
 ├── .gitignore
-├── package-lock.json
+├── .prettierrc
 ├── package.json
+├── package-lock.json
 └── README.md
 ```
 
 ---
 
-## 🛠️ Setup
+## 🌿 Branch Structure
 
-### 1️⃣ Install dependencies
+This repository contains **two main branches**, each showcasing a different backend approach.
+
+---
+
+### 🔹 `main` — Local Data Version
+
+This branch uses **local in-memory data**.
+
+✔ Best for understanding:
+
+- Core backend logic
+- Filtering & sorting mechanics
+- API routing and controllers
+
+✔ No database required
+
+---
+
+### 🔹 `mongodb-setup` — Database Version
+
+This branch integrates **MongoDB with Mongoose**.
+
+✔ Uses schema-based models
+✔ Persistent data storage
+✔ Environment variables
+✔ Scalable & production-ready
+
+---
+
+### 🔄 Switching Between Branches
+
+```bash
+# Local version
+git checkout main
+
+# MongoDB version
+git checkout mongodb-setup
+```
+
+---
+
+## 🔐 Environment Setup (MongoDB Branch)
+
+When using the `mongodb-setup` branch, create a `.env` file in the root directory:
+
+```env
+DATABASE=your_mongodb_connection_string
+PORT=8000
+```
+
+> ⚠️ `.env` is excluded from version control for security reasons.
+
+---
+
+## ▶️ Running the Project
+
+### Install dependencies:
 
 ```bash
 npm install
 ```
 
-### 2️⃣ Start the server
+### Start the server:
 
 ```bash
 npm start
 ```
 
-Server runs on:
+Server will run at:
 
 ```
 http://localhost:8000
@@ -80,8 +154,6 @@ http://localhost:8000
 
 ## 📡 API Endpoints
 
----
-
 ### ✅ Get all tours
 
 ```
@@ -90,7 +162,7 @@ GET /api/v1/tours
 
 ---
 
-### ✅ Get a tour by ID
+### ✅ Get tour by ID
 
 ```
 GET /api/v1/tours/:id
@@ -104,7 +176,7 @@ GET /api/v1/tours/:id
 POST /api/v1/tours
 ```
 
-**Body example:**
+**Example body:**
 
 ```json
 {
@@ -117,13 +189,13 @@ POST /api/v1/tours
 
 ---
 
-### ✅ Update a tour (PATCH)
+### ✅ Update a tour
 
 ```
 PATCH /api/v1/tours/:id
 ```
 
-**Body example:**
+**Example body:**
 
 ```json
 {
@@ -132,8 +204,8 @@ PATCH /api/v1/tours/:id
 }
 ```
 
-✔ Only updates provided fields
-✔ Keeps existing values intact
+✔ Only provided fields are updated
+✔ Others remain unchanged
 
 ---
 
@@ -161,7 +233,7 @@ GET /api/v1/tours?region=Northern
 GET /api/v1/tours?state=Delhi
 ```
 
-### Filter by name (partial match)
+### Filter by name
 
 ```
 GET /api/v1/tours?name=gate
@@ -186,7 +258,7 @@ GET /api/v1/tours?region=Northern&state=Delhi&rating=d
 
 ---
 
-## 📦 Response Structure
+## 📦 Sample Response
 
 ```json
 {
@@ -208,12 +280,12 @@ GET /api/v1/tours?region=Northern&state=Delhi&rating=d
 
 ## 🧠 Filtering Rules
 
-| Filter   | Behavior                |
-| -------- | ----------------------- |
-| `region` | Filters tours by region |
-| `state`  | Filters tours by state  |
-| `name`   | Filters tours by name   |
-| `rating` | Sorts tours by rating   |
+| Filter | Description           |
+| ------ | --------------------- |
+| region | Filters by region     |
+| state  | Filters by state      |
+| name   | Partial name matching |
+| rating | Sorts by rating       |
 
 All filters can be combined.
 
@@ -225,34 +297,60 @@ All filters can be combined.
 curl "http://localhost:8000/api/v1/tours?region=Northern"
 curl "http://localhost:8000/api/v1/tours?state=Delhi"
 curl "http://localhost:8000/api/v1/tours?rating=d"
-curl "http://localhost:8000/api/v1/tours?region=Northern&state=Delhi&rating=d"
 ```
 
 ---
 
-## 🧩 Tech Stack
+## 🧰 Tech Stack
 
 - Node.js
 - Express.js
+- MongoDB (optional branch)
+- Mongoose
 - JavaScript (ES6+)
-- Postman (testing)
+- Postman (API testing)
 
 ---
 
-## 🚧 Future Improvements
+## 🚀 Future Improvements
 
 - Pagination metadata
-- Request validation
-- Centralized error handling
-- Database integration (MongoDB / PostgreSQL)
 - Authentication & authorization
+- Role-based access control
+- API versioning
+- Centralized error handling
+- Docker support
 
 ---
 
-## ✅ Status
+## ✅ Project Status
 
-✔ Actively developed
+✔ Actively maintained
 ✔ Clean architecture
-✔ Easy to extend
+✔ Beginner & recruiter friendly
+
+---
+
+## 💡 Why This Project?
+
+This project demonstrates:
+
+- Practical backend development
+- Clean code practices
+- Real-world API design
+- Git branching workflows
+- Progressive enhancement
+
+---
+
+## 🤝 Contributions
+
+Feel free to fork, explore, and improve the project.
+
+---
+
+## ⭐ Final Note
+
+This project was built for **learning and experimentation**, while maintaining production-level discipline.
 
 ---
