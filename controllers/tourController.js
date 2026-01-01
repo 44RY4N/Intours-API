@@ -1,30 +1,20 @@
-const fs = require('fs');
-const filter = require(`${__dirname}/../filter/filter.js`);
-const toursData = JSON.parse(
-  fs.readFileSync(`${__dirname}/../dev-data/data/csvjson.json`),
-);
-
+const Tours = require(`${__dirname}/../models/tourModel.js`);
 ///////////////////////////////////////////////////////////////////
 // GETTING TOURS
 
-exports.getTours = (req, res) => {
+exports.getTours = async (req, res) => {
   // Formatted Structure for Ease of Access at FrontEnd
-  let tours = {
-    meta: {
-      states: [],
-      region: null,
-    },
-    data: toursData,
-  };
-
-  const isFilter = req.query.filter === 'true'; //convert to boolean
-  //for sort requests
-  if (isFilter) {
-    tours = filter(tours, req.query);
-  }
-  // for page requests
-  if (req.query.page) {
-    tours.data = getPaginatedTours(req, tours);
+  let tours;
+  try {
+    tours = {
+      meta: {
+        states: [],
+        region: null,
+      },
+      data: await Tours.find(),
+    };
+  } catch (err) {
+    return res.status(500).json({ status: 'fail', message: err });
   }
 
   // else send back all tours
@@ -32,7 +22,7 @@ exports.getTours = (req, res) => {
     status: 'success',
     result: tours.data.length,
     meta: tours.meta,
-    filter: isFilter,
+    filter: 'false',
     data: tours.data,
   });
 };
@@ -41,9 +31,12 @@ exports.getTours = (req, res) => {
 
 // GET TOUR BY ID
 
-exports.getTourById = (req, res) => {
-  const ID = Number(req.params.id);
-  const tour = toursData.find((el) => el.Serial === ID);
+exports.getTourById = async (req, res) => {
+  try {
+    const tour = await Tours.findById(req.params.id);
+  } catch (err) {
+    return res.status(500).json({ status: 'fail', message: err });
+  }
   if (!tour) {
     return res.status(404).json({ status: 'fail', message: 'Tour not Found' });
   }
@@ -56,24 +49,14 @@ exports.getTourById = (req, res) => {
 
 // ADD A TOUR
 
-exports.postTour = (req, res) => {
-  const newID = toursData[toursData.length - 1].Serial + 1;
-  console.log(toursData.length);
-  const newTour = Object.assign({ Serial: newID }, req.body);
-  toursData.push(newTour);
-  fs.writeFile(
-    './dev-data/data/csvjson.json',
-    JSON.stringify(toursData),
-    (err) => {
-      if (err) {
-        return res
-          .status(500)
-          .json({ status: 'fail', message: 'Internal Server Error' });
-      }
-      console.log('Successfully added a new Tour ✅');
-      res.status(201).json({ status: 'success', data: { tour: newTour } });
-    },
-  );
+exports.postTour = async (req, res) => {
+  let tour;
+  try {
+    tour = await Tours.create(req.body);
+  } catch (err) {
+    return res.status(500).json({ status: 'fail', message: err });
+  }
+  res.status(201).json({ status: 'success', data: { tour } });
 };
 
 ///////////////////////////////////////////////////////////////////
@@ -81,32 +64,17 @@ exports.postTour = (req, res) => {
 
 // UPDATE A TOUR
 
-exports.patchTour = (req, res) => {
-  const ID = Number(req.params.id);
-  const index = toursData.findIndex((tour) => tour.Serial === ID); // find tourIndex
-
-  if (index === -1) {
-    return res.status(404).json({ status: 'fail', message: 'Tour Not Found' });
+exports.patchTour = async (req, res) => {
+  let updatedTour;
+  try {
+    updatedTour = await Tours.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+  } catch (err) {
+    return res.status(500).json({ status: 'fail', message: err });
   }
-
-  toursData[index] = {
-    ...toursData[index],
-    ...req.body,
-  };
-  //save to file
-  fs.writeFile(
-    './dev-data/data/csvjson.json',
-    JSON.stringify(toursData),
-    (err) => {
-      if (err) {
-        return res
-          .status(500)
-          .json({ status: 'fail', message: 'Internal Server Error' });
-      }
-      console.log('Successfully updated the Tour ✅');
-      res.status(200).json({ status: 'success', data: toursData[index] });
-    },
-  );
+  res.status(200).json({ status: 'success', data: updatedTour });
 };
 
 ///////////////////////////////////////////////////////////////////
@@ -114,39 +82,13 @@ exports.patchTour = (req, res) => {
 
 // DELETE A TOUR
 
-exports.deleteTour = (req, res) => {
-  const ID = Number(req.params.id);
-  const index = toursData.findIndex((tour) => tour.Serial === ID); // find tourIndex
-
-  if (index === -1) {
-    return res.status(404).json({ status: 'fail', message: 'Tour Not Found' });
+exports.deleteTour = async (req, res) => {
+  try {
+    await Tours.findByIdAndDelete(req.params.id);
+  } catch (err) {
+    return res.status(500).json({ status: 'fail', message: err });
   }
-
-  toursData.splice(index, 1); // deleting from tours
-  //save to file
-  fs.writeFile(
-    './dev-data/data/csvjson.json',
-    JSON.stringify(toursData),
-    (err) => {
-      if (err) {
-        return res
-          .status(500)
-          .json({ status: 'fail', message: 'Internal Server Error' });
-      }
-      console.log('Successfully Deleted the Tour ✅');
-      res.status(204).json({ status: 'success', data: null });
-    },
-  );
-};
-
-exports.checkId = (req, res, next, val) => {
-  if (!Number.isInteger(Number(val))) {
-    return res.status(500).json({
-      status: 'fail',
-      message: `Invalid ID Send an Integer Received NAN: ${val}`,
-    });
-  }
-  next();
+  res.status(204).json({ status: 'success', data: null });
 };
 
 exports.checkBody = (req, res, next) => {
@@ -160,10 +102,10 @@ exports.checkBody = (req, res, next) => {
   next();
 };
 
-const getPaginatedTours = (req, tours) => {
-  let limit = Number(req.query.limit);
-  let pageNum = Number(req.query.page) || 1;
-  const startIndex = (pageNum - 1) * limit;
-  const endIndex = startIndex + limit;
-  return tours.data.slice(startIndex, endIndex);
-};
+// const getPaginatedTours = (req, tours) => {
+//   let limit = Number(req.query.limit);
+//   let pageNum = Number(req.query.page) || 1;
+//   const startIndex = (pageNum - 1) * limit;
+//   const endIndex = startIndex + limit;
+//   return tours.data.slice(startIndex, endIndex);
+// };

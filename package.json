@@ -16,12 +16,13 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:dev": "nodemon server.js",
+    "start": "nodemon server.js",
     "start:prod": "SET NODE_ENV=production&nodemon server.js"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
+    "mongoose": "^9.1.1",
     "nodemon": "^3.1.11"
   },
   "devDependencies": {
