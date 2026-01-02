@@ -10,6 +10,7 @@ const tourSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Name is required'],
       unique: [true, 'Name Must be Unique'],
+      trim: true,
     },
     Type: { type: String },
     establishmentYear: { type: Number, alias: 'Establishment Year' },
@@ -29,6 +30,7 @@ const tourSchema = new mongoose.Schema(
     },
     bestTimeToVisit: { type: String, alias: 'Best Time to visit' },
   },
+  // Required for older keys with spacing
   {
     toJSON: {
       virtuals: true,

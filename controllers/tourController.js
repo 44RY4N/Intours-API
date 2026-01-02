@@ -3,29 +3,47 @@ const Tours = require(`${__dirname}/../models/tourModel.js`);
 // GETTING TOURS
 
 exports.getTours = async (req, res) => {
-  // Formatted Structure for Ease of Access at FrontEnd
-  let tours;
   try {
-    tours = {
-      meta: {
-        states: [],
-        region: null,
-      },
-      data: await Tours.find(),
-    };
-  } catch (err) {
-    return res.status(500).json({ status: 'fail', message: err });
-  }
+    // Clone query object
+    let queryObj = { ...req.query };
 
-  // else send back all tours
-  res.status(200).json({
-    status: 'success',
-    result: tours.data.length,
-    meta: tours.meta,
-    filter: 'false',
-    data: tours.data,
-  });
+    // Fields to exclude from filtering
+    const excludedFields = ['page', 'limit', 'sort', 'fields', 'search'];
+    excludedFields.forEach((el) => delete queryObj[el]);
+    // 🔍 Search logic (partial match)
+    if (req.query.search) {
+      queryObj.$or = [
+        { State: { $regex: req.query.search, $options: 'i' } },
+        { City: { $regex: req.query.search, $options: 'i' } },
+        { Name: { $regex: req.query.search, $options: 'i' } },
+      ];
+    }
+
+    let query = Tours.find(queryObj);
+
+    //Sorting
+    if (req.query.sort) {
+      query = query.sort(req.query.sort);
+    }
+
+    // Execute query
+    const tours = await query;
+
+    // Send response
+    res.status(200).json({
+      status: 'success',
+      result: tours.length,
+      meta: [],
+      data: tours,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: 'fail',
+      message: err.message,
+    });
+  }
 };
+
 ///////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
 
