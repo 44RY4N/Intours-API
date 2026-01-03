@@ -4,6 +4,10 @@ const router = express.Router();
 
 // router.param('id', controller.checkId);
 
+// router
+//   .route('/delhi-tours')
+//   .get(controller.aliasDelhiTours, controller.getTours);
+
 router
   .route('/')
   .get(controller.getTours)

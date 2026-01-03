@@ -1,43 +1,17 @@
 const Tours = require(`${__dirname}/../models/tourModel.js`);
+const APIFeatures = require(`${__dirname}/../utils/apiFeatures.js`);
 ///////////////////////////////////////////////////////////////////
-// GETTING TOURS
-
 exports.getTours = async (req, res) => {
   try {
-    // Clone query object
-    let queryObj = { ...req.query };
-
-    // Fields to exclude from filtering
-    const excludedFields = ['page', 'limit', 'sort', 'fields', 'search'];
-    excludedFields.forEach((el) => delete queryObj[el]);
-    // 🔍 Search logic (partial match)
-    if (req.query.search) {
-      queryObj.$or = [
-        { State: { $regex: req.query.search, $options: 'i' } },
-        { City: { $regex: req.query.search, $options: 'i' } },
-        { Name: { $regex: req.query.search, $options: 'i' } },
-      ];
-    }
-    // console.log(await Tours.find());
-    let query = Tours.find(queryObj);
-
-    //Sorting
-    if (req.query.sort) {
-      const sortQ = req.query.sort.split(',').join(' ');
-      query = query.sort(sortQ);
-    }
-
-    //feild limiting
-    if (req.query.fields) {
-      const fields = req.query.fields.split(',').join(' ');
-      query = query.select(fields);
-    }
-
-    // console.log('queryObj', queryObj);
-
     // Execute query
-    const tours = await query;
-    // console.log('tours', tours);
+    const features = new APIFeatures(Tours.find(), req.query)
+      .search()
+      .filter()
+      .sort()
+      .fieldLimit()
+      .paginate();
+    const tours = await features.queryObj;
+    console.log('tours', tours);
     // Send response
     res.status(200).json({
       status: 'success',
@@ -128,11 +102,3 @@ exports.checkBody = (req, res, next) => {
 
   next();
 };
-
-// const getPaginatedTours = (req, tours) => {
-//   let limit = Number(req.query.limit);
-//   let pageNum = Number(req.query.page) || 1;
-//   const startIndex = (pageNum - 1) * limit;
-//   const endIndex = startIndex + limit;
-//   return tours.data.slice(startIndex, endIndex);
-// };
