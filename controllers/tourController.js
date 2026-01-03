@@ -18,17 +18,26 @@ exports.getTours = async (req, res) => {
         { Name: { $regex: req.query.search, $options: 'i' } },
       ];
     }
-
+    // console.log(await Tours.find());
     let query = Tours.find(queryObj);
 
     //Sorting
     if (req.query.sort) {
-      query = query.sort(req.query.sort);
+      const sortQ = req.query.sort.split(',').join(' ');
+      query = query.sort(sortQ);
     }
+
+    //feild limiting
+    if (req.query.fields) {
+      const fields = req.query.fields.split(',').join(' ');
+      query = query.select(fields);
+    }
+
+    // console.log('queryObj', queryObj);
 
     // Execute query
     const tours = await query;
-
+    // console.log('tours', tours);
     // Send response
     res.status(200).json({
       status: 'success',
