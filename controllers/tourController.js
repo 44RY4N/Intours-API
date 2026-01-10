@@ -11,7 +11,7 @@ exports.getTours = async (req, res) => {
       .fieldLimit()
       .paginate();
     const tours = await features.queryObj;
-    console.log('tours', tours);
+    // console.log('tours', tours);
     // Send response
     res.status(200).json({
       status: 'success',
@@ -101,4 +101,22 @@ exports.checkBody = (req, res, next) => {
   }
 
   next();
+};
+
+// Aggregation pipeline for stats
+
+exports.getTourStats = async (req, res) => {
+  try {
+    const stats = await Tours.aggregate([
+      { $match: { zone: 'Eastern' } },
+      { $group: { _id: '$state', avgRating: { $avg: '$googleReviewRating' } } },
+      { $sort: { avgRating: -1 } },
+    ]);
+    res.status(200).json({
+      status: 'success',
+      result: stats,
+    });
+  } catch (err) {
+    res.status(500).json({ status: 'fail', message: err });
+  }
 };
