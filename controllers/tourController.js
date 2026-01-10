@@ -1,6 +1,6 @@
 const Tours = require(`${__dirname}/../models/tourModel.js`);
 const APIFeatures = require(`${__dirname}/../utils/apiFeatures.js`);
-///////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
 exports.getTours = async (req, res) => {
   try {
     // Execute query
