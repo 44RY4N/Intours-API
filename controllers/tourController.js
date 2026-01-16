@@ -108,9 +108,15 @@ exports.checkBody = (req, res, next) => {
 exports.getTourStats = async (req, res) => {
   try {
     const stats = await Tours.aggregate([
-      { $match: { zone: 'Eastern' } },
-      { $group: { _id: '$state', avgRating: { $avg: '$googleReviewRating' } } },
-      { $sort: { avgRating: -1 } },
+      { $match: { zone: 'Northern' } },
+      {
+        $group: {
+          _id: '$state',
+          avgRating: { $avg: '$googleReviewRating' },
+          numTours: { $sum: 1 },
+        },
+      },
+      { $sort: { numTours: -1, avgRating: -1 } },
     ]);
     res.status(200).json({
       status: 'success',
